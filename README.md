@@ -1,7 +1,30 @@
+# Temperature Measurement Network
+The Temperature Measurement Network consists of three major components: Sensors, EdgeDevice, and Cloud Component
+
+### Sensors
+- Two sensors simulate temperature measurements every 5 seconds.
+- Measured temperatures are sent to the EdgeDevice.
+
+### Edge Device
+- Receives temperature data from the sensors.
+- Periodically calculates the average temperature from the received data.
+- Sends the average temperature to the Cloud Component.
+
+### Cloud Component
+- Receives average temperatures from the EdgeDevice.
+- Processes the received data.
+- Sends a warning back to the EdgeDevice if the temperature exceeds a certain threshold.
+
+Each component implements reliable messaging by caching data if no acknowledgment is received after sending a message. 
+Data transmission is periodically retried until successful, ensuring no data is lost.
+
+## Setup Instructions
+### Step 1: Run Local Tunnel
 run: ```lt --port 8000```
 
 copy printed url (e.g. https://shaky-cooks-smash.loca.lt)and add to script.sh (LOCAL_TUNNEL_URL) but keep /response
 
+### Step 2: Initialize and Apply Terraform
 ```bash
 
 cd terraform
@@ -10,6 +33,7 @@ terraform apply -var gcp_project_id=YOUR_GCP_PROJCT_ID -auto-approve
 ```
 Copy outputted IP and add it to EdgeDevice.java (line 19)
 
+### Step 3: Wait for VM Creation
 Wait 5-10 minutes for the VM to be created and the server to be up and running
 
 You can check if this already happened by SSHing into the VM 
@@ -23,7 +47,7 @@ and navigating to the /home/ubuntu/ directory where we cloned the repo and check
 cd /home/ubuntu/
 ls
 ```
-
+### Step 4: Start Edge Device
 Now the CloudComponent.java is running in the VM with Docker and we can start the EdgeDevice.java (from root)
 
 ```bash
@@ -67,6 +91,12 @@ sudo docker rm fog-server
 sudo docker run -d -p 8089:8089 --name fog-server -e EDGE_DEVICE_URL=ADD_NEW_URL_HERE/response fog-computing-server-saved
 ```
 Afterwards, the cloud component will send the data to the new URL from the cache file.
+
+## Cleanup
+To delete all cloud resources, run
+```bash
+terraform destroy -var gcp_project_id=YOUR_GCP_PROJECT_ID -auto-approve
+```
 
 ## Useful commands:
 
