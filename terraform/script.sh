@@ -16,7 +16,7 @@ sudo apt update
 sudo apt install -y -q docker-ce
 
 sudo apt install -y git
-sudo git clone https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/Siar-Akbayin/fog-test.git /home/ubuntu/fog-test
+sudo git clone https://github.com/Siar-Akbayin/fog-computing-assignment.git /home/ubuntu/fog-test
 
 cd /home/ubuntu/fog-test
 sudo docker build -t fog-computing-server .
