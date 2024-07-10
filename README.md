@@ -37,10 +37,38 @@ java src/Sensor.java
 ```
 
 
+## Test the Caching Mechanisms
 
+### Test cache of sensors
+If the edge device is not reachable for the sensors, the produced data will be stored in a cache file until the edge 
+device is reachable again. To test this, you can stop the edge device by pressing `Ctrl + C` in the terminal where the
+edge device is running. The sensors will then produce data and store it in the cache file. When the edge device is started again, 
+the data will be sent to the edge device. If the cache file contains more than 25 entries, the oldest 25 entries will be sent first,
+and then the sensor will wait before sending the next batch to not overload the edge device.
 
+### Test cache of edge device
+If the cloud component is not reachable for the edge device, the data will be stored in a cache file until the cloud 
+component is reachable again. To test this, you can disconnect you local machine from the internet for a certain time period. 
+After reconnecting to the internet, the edge device will send the data to the cloud component. If the cache file contains more 
+than 25 entries, the oldest 25 entries will be sent first, and then the edge device will wait before sending the next batch to not
+overload the cloud component.
 
-Useful commands:
+### Test cache of cloud component
+The testing of the cloud component cache is more difficult, as we use localtunnel to expose the edge device to the internet. 
+To test the cache of the cloud component, you can stop the edge device by pressing `Ctrl + C` in the terminal where the localtunnel
+command is running. The cloud component will then not receive any data from the edge device. The data will be stored in a cache file
+until the edge device is reachable again. However, if the localtunnel command is being executed again, the edge device will receive 
+a new URL and the cloud component will not be able to send the data to the edge device. To make the cloud component send the data to
+the new URL without using the data of the cache file, you need to SSH into the instance and run the following commands:
+```bash
+sudo docker stop fog-server
+sudo docker commit fog-server fog-computing-server-saved
+sudo docker rm fog-server
+sudo docker run -d -p 8089:8089 --name fog-server -e EDGE_DEVICE_URL=ADD_NEW_URL_HERE/response fog-computing-server-saved
+```
+Afterwards, the cloud component will send the data to the new URL from the cache file.
+
+## Useful commands:
 
 For debugging the server, SSH into the VM and run 
 ```bash
