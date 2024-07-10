@@ -16,7 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class EdgeDevice {
-    private static final String SERVER_IP = "34.159.206.60"; // External IP of your cloud component
+    private static final String SERVER_IP = "GCP_EXTERNAL_IP"; // External IP of your cloud component
     private static final int SERVER_PORT = 8089;
     private final BlockingQueue<SensorData> dataQueue;
     private final BlockingQueue<SensorData> retryQueue;

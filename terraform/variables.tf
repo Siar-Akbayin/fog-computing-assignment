@@ -1,7 +1,6 @@
 variable "gcp_project_id" {
   type = string
   description = "Your GCP project ID"
-  default = "fog-computing-426814"
 }
 
 variable "region" {
