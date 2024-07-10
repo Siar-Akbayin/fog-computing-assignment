@@ -92,6 +92,12 @@ sudo docker run -d -p 8089:8089 --name fog-server -e EDGE_DEVICE_URL=ADD_NEW_URL
 ```
 Afterwards, the cloud component will send the data to the new URL from the cache file.
 
+## Cleanup
+To delete all cloud resources, run
+```bash
+terraform destroy -var gcp_project_id=YOUR_GCP_PROJECT_ID -auto-approve
+```
+
 ## Useful commands:
 
 For debugging the server, SSH into the VM and run 
